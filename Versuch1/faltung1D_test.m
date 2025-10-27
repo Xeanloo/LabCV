@@ -52,3 +52,23 @@ title(['Ergebnis mit Filter ', mat2str(f4)]);
 
 %% Randbehandlung
 % TODO c)
+m = floor(length(f)/2);
+x_zero_padded = padarray(x, [0, m], 0, 'both');
+x_mirror_padded = padarray(x, [0, m], 'symmetric', 'both');
+
+y_zero = conv(x_zero_padded, f, 'valid');
+y_mirror = conv(x_mirror_padded, f, 'valid');
+
+figure(2);
+clf;
+subplot(1, 3, 1);
+plot(xs, x, '-b.');
+title('Original Function');
+subplot(1, 3, 2);
+plot(xs, y_zero, '-r.');
+title('Zero-Padded');
+subplot(1, 3, 3);
+plot(xs, y_mirror, '-g.');
+title('Mirrored');
+
+% Zeropadding creates artifacts at the edges, while mirroring preserves the edge behavior better but may introduce discontinuities if the function is not symmetric at the edges.
