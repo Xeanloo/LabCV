@@ -1,0 +1,7 @@
+1)
+same: die Dimensionen der Matrix werden beibehalten 
+valid: nur die Werte der Matrix, die mithilfe der tatsächlichen Matrixwerte (ohne Padding) berechnet wurden, werden beibehalten
+full: alle Werte der Matrix werden beibehalten
+2) mit dem Wert des Bildrands padden. Vorteil: der Bildrand wird nicht als Kante detektiert 
+3) Glättung: Tiefpassfilter, Ableitungsfilter: Hochpassfilter
+4) Parameter wie den Schwellwert anpassen
