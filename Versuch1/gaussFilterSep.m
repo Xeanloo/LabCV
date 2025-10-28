@@ -13,5 +13,5 @@ function I_gauss = gaussFilterSep(I, sigma)
     % Befehl: conv2, imfilter
     I_gauss = conv2(gauss_transposed, gaussFilter_x, I, 'same');
 
-   % I_gauss = uint8(I_gauss);
+   %I_gauss = uint8(I_gauss);
 end
