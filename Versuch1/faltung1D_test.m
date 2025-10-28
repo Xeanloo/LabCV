@@ -2,9 +2,6 @@
 
 %% Testfunktion
 
-% a) Das Resultat ist auf die zentrale Überlappung der Faltung beschränkt
-% Das Ergebnis hat die gleiche Größe wie das erste Eingabeargument
-
 % generiere Stützstellen, an denen die Funktion ausgewertet werden soll
 dx = 0.5;
 xs = -5:dx:5;
@@ -70,5 +67,3 @@ title('Zero-Padded');
 subplot(1, 3, 3);
 plot(xs, y_mirror, '-g.');
 title('Mirrored');
-
-% Zeropadding creates artifacts at the edges, while mirroring preserves the edge behavior better but may introduce discontinuities if the function is not symmetric at the edges.
