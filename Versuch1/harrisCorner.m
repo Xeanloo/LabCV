@@ -3,39 +3,47 @@ function ecken = harrisCorner(I, sigma_I, sigma_M, schwellwert)
     
     % 1. Konvertierung des Eingangsbildes in double.
     I = double(I);
-    
     % 2. Glättung des Bildes mit Gauss-Filter (sigma_I).
     
     
-      % TODO
-    
+    smoothed = gaussFilterSep(I, sigma_I);
     
     % 3. Strukturtensor M = [Iu^2, Iu*Iv; Iu*Iv, Iv^2] bilden.
     % a) Ableitung in x-Richtung (Sobel, ...)
-    
-    
-      % TODO
-    
-    
+
+    sobel_x = [-1 0 1; -2 0 2; -1 0 1];
+    Iu = conv2(smoothed, sobel_x, 'same');
+
     % b) Ableitung in y-Richtung (Sobel, ...)
-    
-    
-      % TODO
-    
-    
-    % c) Elemente des Strukturtensors bestimmen. Diese sollten in 
+
+    sobel_y = [1 2 1; 0 0 0; -1 -2 -1];
+    Iv = conv2(smoothed, sobel_y, 'same');
+
+    % TODO
+    Iu2 = Iu.^2;
+    Iv2 = Iv.^2;
+    IuIv = Iu .* Iv;
+
+    % c) Elemente des Strukturtensors bestimmen. Diese sollten in
     %    einzelnen Matrizen gespeichert werden.
-    
-    
-      % TODO
-    
+
+    M11 = Iu2;
+    M12 = IuIv;
+    M22 = Iv2;
+
+    % TODO
+
     
     % 4. Aufsummierung des Strukturtensors M mit Gaussfilter (sigma_M), d.h.
     %    Glättung der einzelnen Bestandteile.
     
     
-      % TODO
-    
+    M11 = gaussFilterSep(M11, sigma_M);
+    M12 = gaussFilterSep(M12, sigma_M);
+    M22 = gaussFilterSep(M22, sigma_M);
+    %imshow(M11);
+    %colormap(gray(256));
+    %colorbar;
     
     % 5. Auswertung des Strukturtensors. 
     % a) Bestimmung der Detektorantwort R, um die explizite Berechnung der
@@ -47,15 +55,16 @@ function ecken = harrisCorner(I, sigma_I, sigma_M, schwellwert)
     %    det(M) = Iu^2 * Iv^2 - (Iu*Iv)^2
     %    trace(M) = Iu^2 + Iv^2
     kappa = 0.04;   % Standardwert
+
+    R = (M11 .* M22 - M12.^2) - kappa * (M11 + M22).^2;
     
     
-      % TODO
-    
+
     
     % b) Werte unterhalb des Schwellwertes auf 0 setzen.
     %    Befehl: find, alternativ "logical indexing"
-    
-    
+    R(R < schwellwert) = 0;
+
       % TODO
     
     
@@ -64,14 +73,15 @@ function ecken = harrisCorner(I, sigma_I, sigma_M, schwellwert)
     %    alternativ elementweise Bestimmung (Nichtmaxima auf 0 setzen)
     
     
-      % TODO
-    
-    
+    R = imregionalmax(R, 8.0);
+
     % 6. Ecken bestimmen
     %    Befehl: find
     
     
-      % TODO
+    [row, col] = find(R);
+
+    ecken = [row, col];
     
 end
 

@@ -1,8 +1,12 @@
 % Testet den Harris-Corner-Detektor.
-I = imread('./bilder/blox.gif');
+I = imread('./bilder/bloecke.jpg');
 ecken = harrisCorner(I, 1, 4, 1e6);
 
-% Darstellung
+
+
+ %disp(ecken);
+
+ % Darstellung
 figure(1); clf;
 subplot(121); imshow(I);
 subplot(122); imshow(I);
@@ -15,7 +19,8 @@ hold on;        % ermöglicht weitere Objekte in die figure zu zeichnen
 % verläuft senkrecht, die j-Achse waagerecht.
 
 
-    % TODO
+plot(ecken(:,2), ecken(:,1), 'r+', 'MarkerSize', 8, 'LineWidth', 1.5);
 
 
-hold off;
+hold off;  
+
