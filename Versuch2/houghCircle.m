@@ -19,6 +19,7 @@ function [mOut, nOut, rOut] = houghCircle(E, nc, minR, maxR)
 
     
         % TODO
+    [edgeY, edgeX] = find(E); 
     
     
     % Initialisierung der dreidimensionalen (m, n, r) Akkumulatormatrix A 
@@ -28,9 +29,8 @@ function [mOut, nOut, rOut] = houghCircle(E, nc, minR, maxR)
     
         
         % TODO    
+    A = zeros(size(E, 1), size(E, 2), maxR - minR + 1);
     
-    
-    % Bestimmung der Update-Maske für die Akkumulatormatrix
     A_update = getAccumulatorUpdate(minR, maxR);    
     
     % Kantenpixel durchlaufen und Akkumulatormatrix erhöhen, d.h.
@@ -42,8 +42,18 @@ function [mOut, nOut, rOut] = houghCircle(E, nc, minR, maxR)
     % Achten Sie auch auf eine geeignete Randbehandlung.
     
     
-        % TODO
-    
+    for i = 1:length(edgeX)
+        x = edgeX(i);  
+        y = edgeY(i); 
+        
+        if x - maxR < 1 || x + maxR > size(E, 2) || y - maxR < 1 || y + maxR > size(E, 1)
+            continue;
+        end
+        
+        region = A(y - maxR : y + maxR, x - maxR : x + maxR, :);
+        region = region + A_update;
+        A(y - maxR : y + maxR, x - maxR : x + maxR, :) = region;
+    end
     
     % finde die nc größten Punkte in der Akkumulatormatrix
     % ensprechende Parameter werden in die Vektoren m, n, r geschrieben
