@@ -14,6 +14,10 @@ function AUpdate = getAccumulatorUpdate(minR, maxR)
    
     
     	% TODO
+    M = 2*maxR+1;
+    N = 2*maxR+1;
+    R = maxR - minR + 1;               
+    AUpdate = zeros(M, N, R);
     
     
     % 2. In der Maske für jeden Radius r die Punkte auf 1 setzen, deren
@@ -24,7 +28,15 @@ function AUpdate = getAccumulatorUpdate(minR, maxR)
     %    Maske auf 1 setzen, wenn r im relevanten Bereich ist.
     
     
-        % TODO
-        
-        
+    % TODO
+    center = [maxR + 1, maxR + 1]; 
+    for m = 1:M
+        for n = 1:N
+            dist = round(sqrt((m - center(1))^2 + (n - center(2))^2));
+            if dist >= minR && dist <= maxR
+                rIndex = dist - minR + 1; 
+                AUpdate(m, n, rIndex) = 1;
+            end
+        end
+    end
 end
