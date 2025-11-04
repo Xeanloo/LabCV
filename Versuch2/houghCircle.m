@@ -14,12 +14,12 @@ function [mOut, nOut, rOut] = houghCircle(E, nc, minR, maxR)
     rOut = zeros(1, nc);
       
     % Bestimmung aller Kantenpixel im Kantenbild
-    %
+    %edgeY
     % Befehl: find
 
     
         % TODO
-    [edgeY, edgeX] = find(E); 
+    [edgeX, edgeY] = find(E); 
     
     
     % Initialisierung der dreidimensionalen (m, n, r) Akkumulatormatrix A 
@@ -58,8 +58,12 @@ function [mOut, nOut, rOut] = houghCircle(E, nc, minR, maxR)
     % finde die nc größten Punkte in der Akkumulatormatrix
     % ensprechende Parameter werden in die Vektoren m, n, r geschrieben
     for it = 1:nc
+        thr = round((maxR + minR)/2);
+        thr = round((maxR + minR)/4);
         [~, ind] = max(A(:));
         [mOut(it), nOut(it), rOut(it)] = ind2sub(size(A), ind);
-        A(mOut(it), nOut(it), rOut(it)) = 0;
+        % A(mOut(it), nOut(it), rOut(it)) = 0;
+        A(mOut(it)-thr:mOut(it)+thr, nOut(it)-thr:nOut(it)+thr, rOut(it)-thr:rOut(it)+thr) = 0;
+        % A(max(mOut(it)-thr, 1):min(mOut(it)+thr, size(A, 1)), max(nOut(it)-thr, 1):min(nOut(it)+thr, size(A, 2)), max(rOut(it)-thr, 1):min(rOut(it)+thr, size(A, 3))) = 0;
     end
 end
