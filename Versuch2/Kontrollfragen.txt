@@ -1,0 +1,8 @@
+a) θ = Winkel der Geraden zur X-Achse, ρ = Distanz der Geraden zum Ursprung. Vorteil ist, dass
+auch Senkrechten dargestellt werden können im Gegensatz zur y = mx + b Parametrisierung.
+b) Die Akkumulatormatrix ist ein mehrdimensionales Feld (Anzahl Dimensionen = Anzahl Parameter), das
+für jede Parameterkombination speichert, wie oft Punkte im Bild die Kurvengleichung mit diesen Parametern erfüllen.
+c)  Weil größere Kreise mehr Punkte haben, die zum Akkumulatorwert beitragen. Dadurch haben diesen
+Kreise höhere korrespondierende Akkumulatorwerte, die von einem max() zuerst gefunden werden.
+Gelöst werden kann das Problem, indem man die Akku-Werte in Bezug auf den Kreisumfang normalisiert.
+d) Weil der Rechenaufwand mit der Parameterzahl exponentiell wächst.
