@@ -3,13 +3,13 @@ grayI = rgb2gray(I);
 grayI = imgaussfilt(grayI, 5);
 % grayI = imbilatfilt(grayI, 75, 9);
 edges = edge(grayI, 'canny');
-[mOut, nOut, rOut] = houghCircle(edges, 100, 10, 35);
+[mOut, nOut, rOut] = houghCircle(edges, 100, 10, 26);
 
 disp(size(rOut, 2) + " circles detected.");
 
 figure(1); subplot(1,3,1);
 imshow(I);
-plotCircle(mOut, nOut, rOut);
+plotCircle(nOut, mOut, rOut);
 title('Circles detected');
 
 figure(1); subplot(1,3,2);
