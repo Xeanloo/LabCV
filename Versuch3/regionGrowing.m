@@ -13,7 +13,6 @@ function S = regionGrowing(I, xStart, yStart, tau)
 
     % --- Initialize ---
     S = false(m,n);                % segmentation mask (0/1)
-    visited = false(m,n);          % to avoid re-adding points
     apList = false(m,n);           % available points set
     apList(xStart, yStart) = true;
 
@@ -43,7 +42,6 @@ function S = regionGrowing(I, xStart, yStart, tau)
         % --- Step 9–10: move p from available to region S ---
         apList(px,py) = false;
         S(px,py) = true;
-        visited(px,py) = true;
 
         % --- Step 13: update running mean efficiently ---
         regionCount = regionCount + 1;
@@ -54,7 +52,7 @@ function S = regionGrowing(I, xStart, yStart, tau)
             nx = px + neigh(t,1);
             ny = py + neigh(t,2);
             if nx>=1 && nx<=m && ny>=1 && ny<=n
-                if ~visited(nx,ny) && ~S(nx,ny) && ~apList(nx,ny)
+                if ~S(nx,ny) && ~apList(nx,ny)
                     apList(nx,ny) = true;  % add newly discovered neighbor
                 end
             end
