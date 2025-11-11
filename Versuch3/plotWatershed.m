@@ -3,7 +3,7 @@ function plotWatershed(I, S)
 %
 % Eingabe: I - Bild
 %          S - Wasserscheidentransformation
-
+figure(1);
 subplot(121);
 imshow(label2rgb(S));
 
