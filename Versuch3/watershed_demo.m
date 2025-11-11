@@ -1,21 +1,33 @@
-I = imread("./bilder/Emphysem.png");
+RGB = imread("./bilder/Emphysem.png");
+
 figure(2);
 subplot(1, 4, 1);
-I = imdiffusefilt(I, "NumberOfIterations", 4);
+I = im2gray(RGB);
+imshow(I)
+
+figure(2);
+subplot(1, 4, 2);
+I = imdiffusefilt(I);
+I = imgaussfilt(I, 3);
 imshow(I);
 
-% subplot(1, 4, 2);
-% I = imgaussfilt(I, 1.5);
-% imshow(I);
-
+figure(2);
 subplot(1, 4, 3);
-I = im2gray(I);
+I = imsharpen(I, 'Radius', 2, 'Amount', 1.5);
+% I = adapthisteq(I);
 imshow(I);
-%I = RGB;
 
+figure(2);
 subplot(1, 4, 4);
 Icomp = imcomplement(I);
-imshow(I);
-Ifilt = imhmin(Icomp, 5);
+
+
+Ifilt = imhmin(Icomp, 6.5);
+Ifilt(Ifilt > 100) = 0;
+imshow(Ifilt);
 Lfilt = watershed(Ifilt);
-plotWatershed(RGB, Lfilt)
+
+figure(3);
+subplot(1, 1, 1);
+imshow(RGB);
+plotWatershed(RGB, Lfilt);
