@@ -22,10 +22,16 @@ end
 
 
     % TODO
+avg_cell = mean(pos_images, 3);
+avg_cell = imadjust(avg_cell);
+% disp(size(avg_cell));
+% return
 
 
 % Histogramm bestimmen
 % Befehl: imhist
+imhist(avg_cell);
+[counts, binLocations] = imhist(avg_cell);
 
 
     % TODO
@@ -37,7 +43,18 @@ end
 % Wert -1 - Zellwand (dunkle Bereiche)
 % Wert  0 - übrige Bereiche
 
+white_threshold = 0.6;
+black_threshold = 0.4;
+avg_cell(avg_cell > white_threshold) = 1;
+avg_cell(avg_cell < black_threshold) = -1;
+avg_cell(avg_cell >= black_threshold & avg_cell <= white_threshold) = 0;
+imagesc(avg_cell); axis image off;
 
+cmap = [0 1 0;
+        0 0 1;
+        1 0 0];
+colormap(cmap);
+clim([-1 1]); 
     % TODO
 
 
@@ -51,12 +68,22 @@ end
 % und abschließend voneinander abgezogen.
 % Die entsprechenden Bereiche sind durch die definierte Zellmaske gegeben.
 
+pos_mask_cell_wall = (avg_cell == -1);
+pos_mask_cell_core = (avg_cell == 1);
+pos_diff_array = zeros(1, size(pos_images, 3));
 for it = 1:size(pos_images, 3)
     im = pos_images(:, :, it);
-
-    
     % TODO
-    
+    res = im .* avg_cell;
+    diff = mean(res(:));
+
+    % cell_wall_avg = mean(im .* pos_mask_cell_wall);
+    % cell_wall_avg = mean(cell_wall_avg);
+    % cell_core_avg = mean(im .* pos_mask_cell_core);
+    % cell_core_avg = mean(cell_core_avg);
+    % diff = cell_core_avg - cell_wall_avg;
+    %
+    pos_diff_array(it) = diff;
     
 end
 
@@ -64,7 +91,8 @@ end
 
 
     % TODO
-
+mu_pos = mean(pos_diff_array);
+var_pos = var(pos_diff_array);
 
 % Merkmal für die negativen Beispiele bestimmen.
 dir = './Bad/';
@@ -78,12 +106,23 @@ for im = 1:n_img
     end
 end
 
+
+
+
+neg_diff_array = zeros(1, size(neg_images, 3));
 for it = 1:size(neg_images, 3)
     im = neg_images(:, :, it);
 
-    
     % TODO
+    res = im .* avg_cell;
+    diff = mean(res(:));
+    % cell_wall_avg = mean(im .* pos_mask_cell_wall);
+    % cell_wall_avg = mean(cell_wall_avg);
+    % cell_core_avg = mean(im .* pos_mask_cell_core);
+    % cell_core_avg = mean(cell_core_avg);
     
+    % diff = cell_core_avg - cell_wall_avg;
+    neg_diff_array(it) = diff;
     
 end
 
@@ -91,6 +130,10 @@ end
 
 
     % TODO
+mu_neg = mean(neg_diff_array);
+disp(mu_neg);
+disp(std(neg_diff_array));
+var_neg = mean(neg_diff_array);
 
 
 %% Schwellwert für die Klassifikation bestimmen
@@ -99,7 +142,18 @@ end
 
 
     % TODO
+diff_range = linspace(min([min(neg_diff_array), min(pos_diff_array)]) - 10, ...
+                max([max(neg_diff_array), max(pos_diff_array)]) + 15, 1000);
 
+figure;
+subplot(1, 1, 1);
+hold on
+plot(diff_range, normpdf(diff_range, mu_pos, std(pos_diff_array)), 'b', 'DisplayName', 'Positive');
+plot(diff_range, normpdf(diff_range, mu_neg, std(neg_diff_array)), 'r', 'DisplayName', 'Negative');
+title('Thresholds');
+legend;
+hold off;
+return
 
 % Schwellwert bestimmen, der eine (optimale) Trennung zwischen Zelle und
 % Hintergrund auf der Basis des Merkmals angibt und im Plot markieren
