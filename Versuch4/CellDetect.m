@@ -74,16 +74,22 @@ pos_diff_array = zeros(1, size(pos_images, 3));
 for it = 1:size(pos_images, 3)
     im = pos_images(:, :, it);
     % TODO
-    res = im .* avg_cell;
-    diff = mean(res(:));
-
     % cell_wall_avg = mean(im .* pos_mask_cell_wall);
     % cell_wall_avg = mean(cell_wall_avg);
     % cell_core_avg = mean(im .* pos_mask_cell_core);
     % cell_core_avg = mean(cell_core_avg);
     % diff = cell_core_avg - cell_wall_avg;
     %
-    pos_diff_array(it) = diff;
+    % Mittelwerte NUR über die maskierten Pixel:
+    cell_wall_vals = im(pos_mask_cell_wall);
+    cell_core_vals = im(pos_mask_cell_core);
+
+    m_wall = mean(cell_wall_vals);
+    m_core = mean(cell_core_vals);
+
+    % Differenz: Kern minus Wand (für echte Zellen positiv)
+    diff_val = m_core - m_wall;
+    pos_diff_array(it) = diff_val;
     
 end
 
@@ -93,6 +99,7 @@ end
     % TODO
 mu_pos = mean(pos_diff_array);
 var_pos = var(pos_diff_array);
+std_pos = sqrt(var_pos);
 
 % Merkmal für die negativen Beispiele bestimmen.
 dir = './Bad/';
@@ -114,47 +121,62 @@ for it = 1:size(neg_images, 3)
     im = neg_images(:, :, it);
 
     % TODO
-    res = im .* avg_cell;
-    diff = mean(res(:));
     % cell_wall_avg = mean(im .* pos_mask_cell_wall);
     % cell_wall_avg = mean(cell_wall_avg);
     % cell_core_avg = mean(im .* pos_mask_cell_core);
     % cell_core_avg = mean(cell_core_avg);
     
     % diff = cell_core_avg - cell_wall_avg;
-    neg_diff_array(it) = diff;
+    % Gleiche Maske verwenden (Kern/Wand an derselben Stelle)
+    cell_wall_vals = im(pos_mask_cell_wall);
+    cell_core_vals = im(pos_mask_cell_core);
+
+    m_wall = mean(cell_wall_vals);
+    m_core = mean(cell_core_vals);
+
+    diff_val = m_core - m_wall;
+    neg_diff_array(it) = diff_val;
     
 end
 
 % Bestimme Mittelwert und Varianz der negativen Beispiele
 
 
-    % TODO
-mu_neg = mean(neg_diff_array);
-disp(mu_neg);
-disp(std(neg_diff_array));
-var_neg = mean(neg_diff_array);
-
-
 %% Schwellwert für die Klassifikation bestimmen
 
 % Verteilungen (positive und negative Beispiele) plotten
 
+% Mittelwert und Varianz der negativen Beispiele
+mu_neg  = mean(neg_diff_array);
+var_neg = var(neg_diff_array);
+std_neg = sqrt(var_neg);
 
-    % TODO
-diff_range = linspace(min([min(neg_diff_array), min(pos_diff_array)]) - 10, ...
-                max([max(neg_diff_array), max(pos_diff_array)]) + 15, 1000);
+fprintf('Positive: mu = %.4f, sigma = %.4f\n', mu_pos, std_pos);
+fprintf('Negative: mu = %.4f, sigma = %.4f\n', mu_neg, std_neg);
+
+%% Schwellwert für die Klassifikation bestimmen (Bayes)
+
+% Wir nehmen gleiche Priors P(pos)=P(neg)=0.5 an.
+P_pos = 0.5;
+P_neg = 0.5;
+
+% Verteilungen plotten
+diff_min = min([pos_diff_array(:); neg_diff_array(:)]);
+diff_max = max([pos_diff_array(:); neg_diff_array(:)]);
+x_vals = linspace(diff_min - 0.5, diff_max + 0.5, 1000);
+
+pdf_pos = normpdf(x_vals, mu_pos, std_pos);
+pdf_neg = normpdf(x_vals, mu_neg, std_neg);
 
 figure;
-subplot(1, 1, 1);
-hold on
-plot(diff_range, normpdf(diff_range, mu_pos, std(pos_diff_array)), 'b', 'DisplayName', 'Positive');
-plot(diff_range, normpdf(diff_range, mu_neg, std(neg_diff_array)), 'r', 'DisplayName', 'Negative');
-title('Thresholds');
-legend;
-hold off;
-return
+plot(x_vals, pdf_pos, 'b', 'LineWidth', 2); hold on;
+plot(x_vals, pdf_neg, 'r', 'LineWidth', 2);
+xlabel('Merkmalswert (m_{Kern} - m_{Wand})');
+ylabel('Dichte');
+legend('Positiv (Zelle)', 'Negativ (kein Zelle)');
+title('Verteilungen des Merkmals');
 
+return
 % Schwellwert bestimmen, der eine (optimale) Trennung zwischen Zelle und
 % Hintergrund auf der Basis des Merkmals angibt und im Plot markieren
 
