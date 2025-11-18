@@ -176,18 +176,18 @@ ylabel('Dichte');
 legend('Positiv (Zelle)', 'Negativ (kein Zelle)');
 title('Verteilungen des Merkmals');
 
-return
+%return
 % Schwellwert bestimmen, der eine (optimale) Trennung zwischen Zelle und
 % Hintergrund auf der Basis des Merkmals angibt und im Plot markieren
 
 
     % TODO
-
+threshold = 0.11;
 
 %% Bild(ausschnitte) klassifizieren und gefundene Zellen markieren
 
 % Testbild laden
-img = im2double(rgb2gray(imread('CellDetectPreFreeze.jpg')));
+img = im2double(rgb2gray(imread('CellDetectPostFreeze.jpg')));
 
 % Bild mit einem "Sliding Window" absuchen und Zellen über die Differenz des
 % mittleren Grauwerts der maskierten Zellbestandteile und den Schwellwert detektieren.
@@ -195,11 +195,38 @@ img = im2double(rgb2gray(imread('CellDetectPreFreeze.jpg')));
 
     
     % TODO
+    [height, width] = size(img);
+    % 5-steps sliding window
+    cell_positions = [];
+    step_size = 5;
+    [mask_height, mask_width] = size(avg_cell);
+    for row = 1:step_size:(height - mask_height + 1)
+        for col = 1:step_size:(width - mask_width + 1)
+            window = img(row:(row + mask_height - 1), col:(col + mask_width - 1));
+            % Calculate mean values for cell core and wall
+            cell_wall_vals = window(pos_mask_cell_wall);
+            cell_core_vals = window(pos_mask_cell_core);
 
+            m_wall = mean(cell_wall_vals);
+            m_core = mean(cell_core_vals);
+
+            diff_val = m_core - m_wall;
+
+            if diff_val > threshold
+                cell_positions = [cell_positions; row, col];
+            end
+        end
+    end
 
 % Bild und gefundene Zellen darstellen
 
     
     % TODO
     
-    
+    figure;
+    imshow(img); hold on;
+    for i = 1:size(cell_positions, 1)
+        plot(cell_positions(i, 2) + mask_width/2, cell_positions(i, 1) + mask_height/2, 'r+', 'MarkerSize', 2, 'LineWidth', 1);
+    end
+    hold off;
+    title('Gefundene Zellen (rote Kreuze)');
