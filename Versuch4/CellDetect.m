@@ -24,12 +24,18 @@ end
     % TODO
 avg_cell = mean(pos_images, 3);
 avg_cell = imadjust(avg_cell);
-% disp(size(avg_cell));
+figure(1);
+subplot(1, 3, 1);
+imshow(avg_cell);
+colormap(gca, "gray");
+%disp(size(avg_cell));
 % return
 
 
 % Histogramm bestimmen
 % Befehl: imhist
+figure(1);
+subplot(1, 3, 2);
 imhist(avg_cell);
 [counts, binLocations] = imhist(avg_cell);
 
@@ -43,6 +49,8 @@ imhist(avg_cell);
 % Wert -1 - Zellwand (dunkle Bereiche)
 % Wert  0 - übrige Bereiche
 
+figure(1);
+subplot(1, 3, 3);
 white_threshold = 0.6;
 black_threshold = 0.4;
 avg_cell(avg_cell > white_threshold) = 1;
@@ -53,7 +61,7 @@ imagesc(avg_cell); axis image off;
 cmap = [0 1 0;
         0 0 1;
         1 0 0];
-colormap(cmap);
+colormap(gca, cmap);
 clim([-1 1]); 
     % TODO
 
@@ -182,7 +190,12 @@ title('Verteilungen des Merkmals');
 
 
     % TODO
-threshold = 0.11;
+thresh = 0.11;
+yl = ylim;
+plot([thresh thresh], yl, 'w--', 'LineWidth', 1.5);
+text(thresh, yl(2)*0.9, sprintf('  \\leftarrow T=%.3f', thresh), ...
+    'Color', 'white', 'FontWeight', 'bold');
+hold off;
 
 %% Bild(ausschnitte) klassifizieren und gefundene Zellen markieren
 
@@ -212,7 +225,7 @@ img = im2double(rgb2gray(imread('CellDetectPostFreeze.jpg')));
 
             diff_val = m_core - m_wall;
 
-            if diff_val > threshold
+            if diff_val > thresh
                 cell_positions = [cell_positions; row, col];
             end
         end
