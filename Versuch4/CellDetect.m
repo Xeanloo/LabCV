@@ -162,6 +162,18 @@ std_neg = sqrt(var_neg);
 fprintf('Positive: mu = %.4f, sigma = %.4f\n', mu_pos, std_pos);
 fprintf('Negative: mu = %.4f, sigma = %.4f\n', mu_neg, std_neg);
 
+%% Schwellwert für die Klassifikation bestimmen
+
+% Verteilungen (positive und negative Beispiele) plotten
+
+% Mittelwert und Varianz der negativen Beispiele
+mu_neg  = mean(neg_diff_array);
+var_neg = var(neg_diff_array);
+std_neg = sqrt(var_neg);
+
+fprintf('Positive: mu = %.4f, sigma = %.4f\n', mu_pos, std_pos);
+fprintf('Negative: mu = %.4f, sigma = %.4f\n', mu_neg, std_neg);
+
 %% Schwellwert für die Klassifikation bestimmen (Bayes)
 
 % Wir nehmen gleiche Priors P(pos)=P(neg)=0.5 an.
@@ -188,15 +200,26 @@ title('Verteilungen des Merkmals');
 % Schwellwert bestimmen, der eine (optimale) Trennung zwischen Zelle und
 % Hintergrund auf der Basis des Merkmals angibt und im Plot markieren
 
+% Finde Schnittpunkte der Dichten
+A = 1/(2*std_neg^2) - 1/(2*std_pos^2);
+B = mu_pos/(std_pos^2) - mu_neg/(std_neg^2);
+C = mu_neg^2/(2*std_neg^2) - mu_pos^2/(2*std_pos^2) + log((std_neg * P_pos) / (std_pos * P_neg));
+thresholds = roots([A, B, C]);
+% Wähle den Schnittpunkt, der zwischen den Mittelwerten liegt
+valid_thresholds = thresholds(thresholds > min(mu_pos, mu_neg) & thresholds < max(mu_pos, mu_neg));
+if ~isempty(valid_thresholds)
+    threshold = valid_thresholds(1);
+    disp(['Gefundener Schwellwert: ', num2str(threshold)]);
+    % Markiere den Schwellwert im Plot in grün  
 
+    y_limits = ylim;
+    plot([threshold, threshold], y_limits, 'g--', 'LineWidth', 2);
+    text(threshold + 0.01, y_limits(2) * 0.9, sprintf('Schwellwert = %.4f', threshold), 'Color', 'g');
+    hold off;
+else
+    error('Kein gültiger Schwellwert gefunden.');
+end
     % TODO
-thresh = 0.11;
-yl = ylim;
-plot([thresh thresh], yl, 'w--', 'LineWidth', 1.5);
-text(thresh, yl(2)*0.9, sprintf('  \\leftarrow T=%.3f', thresh), ...
-    'Color', 'white', 'FontWeight', 'bold');
-hold off;
-
 %% Bild(ausschnitte) klassifizieren und gefundene Zellen markieren
 
 % Testbild laden
@@ -225,7 +248,7 @@ img = im2double(rgb2gray(imread('CellDetectPostFreeze.jpg')));
 
             diff_val = m_core - m_wall;
 
-            if diff_val > thresh
+            if diff_val > threshold
                 cell_positions = [cell_positions; row, col];
             end
         end
@@ -243,3 +266,4 @@ img = im2double(rgb2gray(imread('CellDetectPostFreeze.jpg')));
     end
     hold off;
     title('Gefundene Zellen (rote Kreuze)');
+
