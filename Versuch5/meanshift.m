@@ -1,4 +1,4 @@
-function L = meanshift(X, b, vis)
+function [L, C] = meanshift(X, b, vis)
 % Meanshift für n-dimensionale Punkte
 %
 % Eingabe: X   - n-dimensionale Datenpunkte (mxn-Array)
@@ -21,17 +21,21 @@ function L = meanshift(X, b, vis)
     
             % finde Punkte im Umkreis von b
             dists = dist(X, c');
+            
+            % mean of all the points which are within b of c.
             c = mean(X(dists < b, :), 1);
     
             if mod(it, vis) == 0
                 plot([c(1), c_alt(1)], [c(2), c_alt(2)]);
             end
     
+            % do till convergence
             if c == c_alt
                 break;
             end
         end
     
+        % update it'th entry
         centroids(it, :) = c;
     
         if mod(it, vis) == 0
@@ -46,12 +50,12 @@ function L = meanshift(X, b, vis)
     
     % vereinige ähnliche Centroids zu Clustern
     % Idee: fasse alle Centroids zusammen, die weniger Abstand als b/2 zueinander haben
-    [unique_centroids, ~, map_points] = unique(centroids, 'rows');
-    dists = dist(unique_centroids, unique_centroids') < b / 2;
+    [unique_centroids, ~, map_points] = unique(centroids, 'rows'); % m' x n, m' x 1
+    dists = dist(unique_centroids, unique_centroids') < b / 2; % m' x m' , 1, 0 mat
     
     % bestimme zusammenhängende Centroids (Breitensuche)
-    map_centroids = zeros(size(unique_centroids, 1), 1);
-    cluster_id = 1;
+    map_centroids = zeros(size(unique_centroids, 1), 1); % m' x 1
+    cluster_id = 1; % running index
     while true
         next_ind = find(map_centroids == 0, 1); % nächster bisher nicht zugeordneter Centroid
         if isempty(next_ind)
@@ -76,5 +80,11 @@ function L = meanshift(X, b, vis)
     % berechne Clusterzentren
     
         % TODO
+    nClusters = size(unique(L), 1);
+    C = zeros(nClusters, size(X, 2));
+    for it = 1:nClusters
+        cluster_pts = X(L == it);
+        C(it, :) = mean(cluster_pts);
+    end
     
 end
