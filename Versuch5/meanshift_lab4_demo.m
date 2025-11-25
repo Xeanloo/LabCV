@@ -4,14 +4,14 @@ freeze = load("CellDetectFreeze.mat");
 prefreeze = load("CellDetectPreFreeze.mat");
 postfreeze = load("CellDetectPostFreeze.mat");
 
-[~, freezeCluster] = meanshift(freeze.cell_positions, 14, 0);
-[~, prefreezeCluster] = meanshift(prefreeze.cell_positions, 4, 0);
-[~, postfreezeCluster] = meanshift(postfreeze.cell_positions, 4, 0);
+%[~, freezeCluster] = meanshift(freeze.cell_positions, 35, 0);
+ [~, prefreezeCluster] = meanshift(prefreeze.cell_positions, 15, 0);
+% [~, postfreezeCluster] = meanshift(postfreeze.cell_positions, 4, 0);
 
 figure;
 imshow(I);
 hold on;
-for i = 1:size(freezeCluster, 1)
-    plot(freezeCluster(i, 2), freezeCluster(i, 1), 'r*', 'MarkerSize', 10);
+for i = 1:size(prefreezeCluster, 1)
+    plot(prefreezeCluster(i, 2)+50, 50+prefreezeCluster(i, 1), 'r*', 'MarkerSize', 5);
 end
 hold off;

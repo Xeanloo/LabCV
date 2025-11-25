@@ -83,8 +83,8 @@ function [L, C] = meanshift(X, b, vis)
     nClusters = size(unique(L), 1);
     C = zeros(nClusters, size(X, 2));
     for it = 1:nClusters
-        cluster_pts = X(L == it);
-        C(it, :) = mean(cluster_pts);
+        cluster_pts = X(L == it,:);
+        C(it, :) = mean(cluster_pts, 1);
     end
     
 end
