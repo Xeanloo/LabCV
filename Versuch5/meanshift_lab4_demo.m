@@ -1,19 +1,17 @@
-I = im2double(rgb2gray(imread('./bilder/lab4Picts/CellDetectPostFreeze.jpg')));
-vals = I(:);
-numPixels = numel(I);
+I = im2double(rgb2gray(imread('./bilder/lab4Picts/CellDetectPreFreeze.jpg')));
 
-[row, col] = ind2sub(size(I), 1:numPixels);
+freeze = load("CellDetectFreeze.mat");
+prefreeze = load("CellDetectPreFreeze.mat");
+postfreeze = load("CellDetectPostFreeze.mat");
 
-result = [col(:), row(:), vals];
-disp(size(I));
-disp(size(result)); % this is 1.1 mil x 3
+[~, freezeCluster] = meanshift(freeze.cell_positions, 14, 0);
+[~, prefreezeCluster] = meanshift(prefreeze.cell_positions, 4, 0);
+[~, postfreezeCluster] = meanshift(postfreeze.cell_positions, 4, 0);
 
-%%
-% [~, C] = meanshift(result, 2, 2);
-%     figure;
-%     imshow(I); hold on;
-%     for i = 1:size(C, 1)
-%         plot(C(i, 2), C(i, 1), 'r+', 'MarkerSize', 2, 'LineWidth', 1);
-%     end
-%     hold off;
-%     title('Gefundene Zellen (rote Kreuze)');
+figure;
+imshow(I);
+hold on;
+for i = 1:size(freezeCluster, 1)
+    plot(freezeCluster(i, 2), freezeCluster(i, 1), 'r*', 'MarkerSize', 10);
+end
+hold off;
