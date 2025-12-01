@@ -7,7 +7,12 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
-    
+        distances = zeros(m, n);
+        for i = 1:m
+            for j = 1:n
+                distances(i, j) = norm(X(i, :) - P(j, :));
+            end
+        end
     
     % Ordne die Punkte in X den verschiedenen Bins zu, d.h. abhängig von
     % dem Abstand zu den Punkten in P werden die Punkte zusammengefasst
@@ -18,7 +23,8 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
-    
+        rEdges = logspace(log10(rMin), log10(rMax), nBinsR + 1);
+
     
     % b) Weise Punkte in X den entsprechenden Bins zu, d.h. rLabel(i, j)
     %    gibt an, in welchem Bin der Punkt X(i, :) in Bezug auf P(j, :)
@@ -27,7 +33,24 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
-    
+        for i = 1:m
+            for j = 1:n
+                % Ignore points outside [rMin, rMax]
+                if distances(i, j) < rMin || distances(i, j) > rMax
+                    rLabel(i, j) = 0;
+                else
+                    for k = 1:nBinsR
+                        if distances(i, j) >= rEdges(k) && distances(i, j) < rEdges(k + 1)
+                            rLabel(i, j) = k;
+                            break;
+                        end
+                    end
+                    if distances(i, j) == rMax
+                        rLabel(i, j) = nBinsR;
+                    end
+                end
+            end
+        end
     
     % Bestimme Richtung der Punkte in X relativ zu den Punkten P, d.h. den 
     % Winkel zwischen X(i, :) - P(j, :) und der x-Achse.
@@ -35,6 +58,13 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
+        angles = zeros(m, n);
+        for i = 1:m
+            for j = 1:n
+                delta = X(i, :) - P(j, :);
+                angles(i, j) = atan2(delta(2), delta(1));
+            end
+        end
     
     
     % Ordne die Punkte in X den Bins zu
@@ -43,6 +73,7 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
+        thetaEdges = linspace(-pi, pi, nBinsTheta + 1);
     
     
     % b) Weise Punkte in X den entsprechenden Bins zu
@@ -50,7 +81,20 @@ function SC = scCompute(P, X, nBinsTheta, nBinsR, rMin, rMax)
     
     
         % TODO
-    
+        for i = 1:m
+            for j = 1:n
+                for k = 1:nBinsTheta
+                    if angles(i, j) >= thetaEdges(k) && angles(i, j) < thetaEdges(k + 1)
+                        thetaLabel(i, j) = k;
+                        break;
+                    end
+                end
+                % Randfall: Winkel genau bei pi wird zu -pi zugeordnet
+                if angles(i, j) == pi
+                    thetaLabel(i, j) = 1;  % Erster Bin bei -pi
+                end
+            end
+        end
     
     % Histogramm bestimmen, Bins auszählen
     SC = zeros(nBinsR, nBinsTheta, n);
