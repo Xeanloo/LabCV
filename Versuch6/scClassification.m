@@ -9,9 +9,9 @@ load('ShapeContextData.mat')
 %  Einfache Variante: Bestimme Histogramm für Bildmittelpunkt
 
 % setze Parameter
-nBinsTheta = 12;  
+nBinsTheta = 11;  
 nBinsR = 5;       
-rMin = 0.1;       
+rMin = 0.09;       
 rMax = 1.0;       
 
 % Shape Context der Trainingsdaten bestimmen
