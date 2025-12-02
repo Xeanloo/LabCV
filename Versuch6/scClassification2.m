@@ -11,7 +11,7 @@ load('ShapeContextData.mat')
 % setze Parameter
 nBinsTheta = 11;  
 nBinsR = 5;       
-rMin = 0.095;       
+rMin = 0.09;       
 rMax = 1.0;              
 
 % Shape Context der Trainingsdaten bestimmen
