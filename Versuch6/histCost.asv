@@ -11,18 +11,8 @@ function HC = histCost(SCx, SCy)
     end
     % TODO
     if size(SCx, 3) == size(SCy, 3) & size(SCx, 3) == 1
-        HC = histCost1d(SCx, SCy);
+
     else
-        m = size(SCx, 3);
-        n = size(SCy, 3);
-        hcMat = zeros(m, n);
-        for i = 1:m
-            for j = 1:n
-                hcMat(i, j) = histCost1d(SCx(:, :, i), SCy(:, :, j));
-            end
-        end
-        rowMin = min(hcMat, [], 2);
-        colMin = min(hcMat);
-        HC = (sum(rowMin(:)) / m) + (sum(colMin(:) / n));
+        HC = 0;
     end
 end
