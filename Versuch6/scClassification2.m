@@ -15,13 +15,13 @@ rMin = 0.1;
 rMax = 1.0;       
 
 % Shape Context der Trainingsdaten bestimmen
-SC_train = zeros(nBinsR, nBinsTheta, size(train_data, 3));
+SC_train = zeros(nBinsR, nBinsTheta, size(train_data, 3), 50);
 for it = 1:size(train_data, 3)
     img = train_data(:, :, it);
     
     X = getEdgePoints(img, 50);
     
-    SC_train(:, :, it) = scCompute([0.5, 0.5], X, nBinsTheta, nBinsR, rMin, rMax);
+    SC_train(:, :, it, :) = scCompute(X, X, nBinsTheta, nBinsR, rMin, rMax);
 end
 
 %% Shape Context für alle Testdaten bestimmen und klassifizieren
@@ -37,12 +37,12 @@ for it = 1:size(test_data, 3)
     X = getEdgePoints(img, 50);
     
     % Bestimme Shape Context
-    SC = scCompute([0.5, 0.5], X, nBinsTheta, nBinsR, rMin, rMax);
+    SC = scCompute(X, X, nBinsTheta, nBinsR, rMin, rMax);
     
     % Vergleich mit Shape Context der Trainingsdaten
     HC = zeros(1, size(SC_train, 3));
     for it_train = 1:size(SC_train, 3)
-        HC(it_train) = histCost(SC, SC_train(:, :, it_train));
+        HC(it_train) = histCost(SC, SC_train(:, :, it_train, :));
     end
     
     % nearest Neighbor Klassifikation
