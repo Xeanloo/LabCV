@@ -1,30 +1,13 @@
 function [maxValue, optimalX] = graphicalMethod(f, A, b)
-    % graphicalMethod - Graphical solution of linear programming problem
-    %   Solves: max f'*x such that Ax <= b and x >= 0
-    %
-    % Input:
-    %   f - objective function coefficient vector (2x1)
-    %   A - constraint matrix (mx2)
-    %   b - constraint bound vector (mx1)
-    %
-    % Output:
-    %   maxValue - maximum value of objective function found
-    %   optimalX - optimal solution vector (2x1)
-    
-    % Initialize variables
-    selectedPoints = [];
-    selectedValues = [];
-    validPoints = [];
+    objValues = [];
     maxValue = -inf;
     optimalX = [0; 0];
     
-    % Create figure
-    figure('Name', 'Graphical LP Solver', 'NumberTitle', 'off');
+    figure('Name', 'Graphical LP Solver');
     hold on;
     grid on;
     axis equal;
     
-    % Determine plot limits based on constraints
     [xMin, xMax, yMin, yMax] = determinePlotLimits(A, b);
     xlim([xMin, xMax]);
     ylim([yMin, yMax]);
@@ -32,16 +15,10 @@ function [maxValue, optimalX] = graphicalMethod(f, A, b)
     ylabel('x_2');
     title('Linear Programming Problem - Click to select points (Right-click to finish)');
     
-    % Plot constraints
     plotConstraints(A, b, xMin, xMax, yMin, yMax);
-    
-    % Plot feasible region (shaded)
     plotFeasibleRegion(A, b, xMin, xMax, yMin, yMax);
-    
-    % Plot objective function vector (orthogonal direction)
     plotObjectiveVector(f, xMin, xMax, yMin, yMax);
     
-    % Interactive point selection
     fprintf('Click on the plot to select points.\n');
     fprintf('Right-click or press Enter to finish.\n\n');
     
@@ -54,45 +31,38 @@ function [maxValue, optimalX] = graphicalMethod(f, A, b)
             break;
         end
         
-        % Store selected point
-        selectedPoints = [selectedPoints; x, y];
-        
         % Check if point is valid (satisfies all constraints)
         isValid = checkFeasibility([x; y], A, b);
         
         % Evaluate objective function
         objValue = f' * [x; y];
-        selectedValues = [selectedValues; objValue];
         
         % Plot the selected point
         if isValid
-            plot(x, y, 'go', 'MarkerSize', 10, 'MarkerFaceColor', 'g', 'LineWidth', 2);
-            validPoints = [validPoints; x, y, objValue];
+            plot(x, y, 'go', 'MarkerSize', 2, 'MarkerFaceColor', 'g', 'LineWidth', 2);
+            objValues = [objValues;objValue];
             fprintf('Point (%.4f, %.4f): VALID, f(x) = %.4f\n', x, y, objValue);
             
-            % Update maximum if better solution found
+            % Update maximum if necessary
             if objValue > maxValue
                 maxValue = objValue;
                 optimalX = [x; y];
                 fprintf('  -> New best solution!\n');
             end
         else
-            plot(x, y, 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+            plot(x, y, 'rx', 'MarkerSize', 2, 'LineWidth', 2);
             fprintf('Point (%.4f, %.4f): INVALID, f(x) = %.4f\n', x, y, objValue);
         end
         
-        % Display objective value at clicked point
         text(x, y, sprintf('  %.2f', objValue), 'FontSize', 8);
     end
     
-    % Display results
     fprintf('\n=== Results ===\n');
-    if ~isempty(validPoints)
+    if ~isempty(objValues)
         fprintf('Maximum valid objective value: %.4f\n', maxValue);
         fprintf('Optimal solution: x1 = %.4f, x2 = %.4f\n', optimalX(1), optimalX(2));
         
-        % Highlight optimal solution
-        plot(optimalX(1), optimalX(2), 'b*', 'MarkerSize', 15, 'LineWidth', 3);
+        plot(optimalX(1), optimalX(2), 'b*', 'MarkerSize', 8, 'LineWidth', 1);
         text(optimalX(1), optimalX(2), '  OPTIMAL', 'FontSize', 10, 'FontWeight', 'bold', 'Color', 'blue');
     else
         fprintf('No valid points were selected.\n');
@@ -104,8 +74,8 @@ function [maxValue, optimalX] = graphicalMethod(f, A, b)
 end
 
 function [xMin, xMax, yMin, yMax] = determinePlotLimits(A, b)
-    maxX = 1;
-    maxY = 1;
+    maxX = 0;
+    maxY = 0;
     
     % Find maximum intercepts with axes
     for i = 1:size(A, 1)
@@ -172,7 +142,6 @@ function plotFeasibleRegion(A, b, xMin, xMax, yMin, yMax)
         end
     end
     
-    % Shade the feasible region
     contourf(X1, X2, feasible, 1, 'FaceAlpha', 0.3, 'EdgeColor', 'none');
 end
 
@@ -194,7 +163,6 @@ function isValid = checkFeasibility(x, A, b)
     isValid = all(A * x <= b) && all(x >= 0);
 end
 
-
-% [maxValue, optimalX] = graphicalMethod([30; 20], [2, 1; 1, 1; 1, 0], [1500; 1200; 500]);
-% [maxValue, optimalX] = graphicalMethod([12; 7], [2, 1; 3, 2], [10000; 16000]);
-[maxValue, optimalX] = graphicalMethod([2; 5], [1, 4; 3, 1; 1, 1; 0, 1], [24; 21; 9;  4]);
+graphicalMethod([30; 20], [2, 1; 1, 1; 1, 0], [1500; 1200; 500]);
+graphicalMethod([12; 7], [2, 1; 3, 2], [10000; 16000]);
+graphicalMethod([2; 5], [1, 4; 3, 1; 1, 1; 0, 1], [24; 21; 9;  4]);
