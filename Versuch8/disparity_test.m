@@ -26,7 +26,7 @@ subplot(121); imshow(I1);
 subplot(122); imshow(I2);
 
 %% Aufgabe 1a - pixelweiser Vergleich
-D = myDisparity(I1, I2, 10);
+D = myDisparity(I1, I2, 10, 10);
 
 figure(2); clf;
 imagesc(D); colormap(gray); axis image;
