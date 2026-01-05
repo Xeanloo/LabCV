@@ -30,7 +30,7 @@ function D = myDisparity(imgLeft, imgRight, maxDisparity, windowSize)
         figure(5); clf;
         imagesc(SSD); colormap(gray); axis image; title('SSD Disparity Map');
         [~, NCC] = min(NCC, [], 3);
-        D = NCC; % You can change this to SSD or NCC based on the desired method
+        D = NCC; 
     else
         [~, D] = min(D, [], 3);
     end

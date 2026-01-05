@@ -26,7 +26,7 @@ subplot(122); imshow(I2);
 D = zeros(size(I1));
 occlusionWeight = 1;
 maxDisp = 10;
-windowSize = 1;
+windowSize = 10;
 
 windowSize = 2*floor(windowSize/2) + 1; % muss ungerade sein
 for i = 1 + (windowSize - 1) / 2:size(I1, 1) - (windowSize - 1) / 2
@@ -40,7 +40,7 @@ for i = 1 + (windowSize - 1) / 2:size(I1, 1) - (windowSize - 1) / 2
     if mod(i, 10) == 1
         disp(['Zeile ', num2str(i), ' von ', num2str(size(I1, 1))]);
     end
-    [p1, p2] = DTW(v2, v1, occlusionWeight, maxDisp);
+    [p1, p2] = DTW(v2, v1, occlusionWeight, maxDisp, windowSize);
     
     for j = 1 + (windowSize - 1) / 2:size(I1, 2) - (windowSize - 1) / 2
         D(i, j) = find(p1 == j, 1, 'first') - find(p2 == j, 1, 'first');
