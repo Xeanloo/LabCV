@@ -73,16 +73,14 @@ imshow(img1); hold on;
 % draw the projected points
 plot(projPoints1(:,1), projPoints1(:,2), 'go', 'MarkerSize', 10);
 plot(points1(:,1), points1(:,2), 'r*', 'MarkerSize', 10);
-error1 = sqrt(sum((points1(:,1:2) - projPoints1).^2, 2));
-meanError1 = mean(error1(points1(:,1)>0));
-title(sprintf('MSE: %.2f', meanError1));
+error1 = mean(sqrt(sum((points1(:,1:2) - projPoints1).^2, 2)));
+title(sprintf('MSE: %.2f', error1));
 figure(2); clf;
 imshow(img2); hold on;
 plot(projPoints2(:,1), projPoints2(:,2), 'go', 'MarkerSize', 10);
 plot(points2(:,1), points2(:,2), 'r*', 'MarkerSize', 10);
-error2 = sqrt(sum((points2(:,1:2) - projPoints2).^2, 2));
-meanError2 = mean(error2(points2(:,1)>0));
-title(sprintf('MSE: %.2f', meanError2));
+error2 = mean(sqrt(sum((points2(:,1:2) - projPoints2).^2, 2)));
+title(sprintf('MSE: %.2f', error2));
 hold off;
 
 %% Aufgabe 2: Szenenrekonstruktion und Triangulation
@@ -150,8 +148,17 @@ imshow(img2); hold on;
 % c) Rekonstruktion von 3D-Punkten mittels Triangulation
 
 % TODO
+reconstructedPoints = myTriangulation(stereoPoints1(validStereo1, :), stereoPoints2(validStereo2, :), projectionMatrixStereo1, projectionMatrixStereo2);
 
 % d) Visualisierung und Berechnung des Rekonstruktionsfehlers
 
 % TODO
+figure(5); clf;
+view(-30, 30); axis on;
+for i = 1:size(reconstructedPoints, 1)
+    plot3(reconstructedPoints(i, 1), reconstructedPoints(i, 2), reconstructedPoints(i, 3), 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r');
+    hold on;
+end
 
+meanReconstructionError = mean(sqrt(sum((Xw(validStereo1, :) - reconstructedPoints).^2, 2)));
+title(sprintf('MSE: %.2f', meanReconstructionError));
