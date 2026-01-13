@@ -1,7 +1,6 @@
 close all
 %% Verwendung gegebener Stereobilder
 load('focusedStereoSetup.mat');
-% load('parallelStereoSetup.mat');
 
 %% Definition Kalibrierungsobjekt
 Xw = [0, 0, 0; ... % 1 Ecke 1,3,5 (gelb, rot, blau)
@@ -90,14 +89,63 @@ hold off;
 % a) Bestimmung der Projektionsmatrix der zweiten Kamera
 
 % TODO
-
+load('parallelStereoSetup.mat');
+% stereoPoints2 = getPoints(img2);
+stereoPoints2 = [
+  174.7694,  255.9839;...
+  294.0863,  269.6461;...
+  157.4639,  165.8131;...
+  269.4943,  186.7619;...
+  132.8719,  338.8681;...
+  249.4564,  347.9763;...
+  121.0313,  251.4298;...
+         0,         0;...
+]
+stereoPoints1 = [  345.0920,  248.6973;...
+                  448.9250 , 262.3596;...
+                  308.6594 , 160.3482;...
+                  406.1167 , 178.5645;...
+                  284.9782 , 330.6708;...
+                  390.6328 , 341.6006;...
+                  260.3861 , 244.1433;...
+                        0  ,       0;...
+];
+validStereo2 = stereoPoints2(:,1) > 0;
+validStereo1 = stereoPoints1(:,1) > 0;
+projectionMatrixStereo2 = getProjectionMatrix(Xw(validStereo2, :), stereoPoints2(validStereo2, :));
+projectionMatrixStereo1 = getProjectionMatrix(Xw(validStereo1, :), stereoPoints1(validStereo1, :));
 % b) Bestimmung der Kamerazentren (in Matlab: null)
 
 % TODO
 
+cameraCenterStereo2 = null(projectionMatrixStereo2);
+cameraCenterStereo2 = cameraCenterStereo2(1:3) ./ cameraCenterStereo2(4);
+cameraCenterStereo1 = null(projectionMatrixStereo1);
+cameraCenterStereo1 = cameraCenterStereo1(1:3) ./ cameraCenterStereo1(4);
+
+cameraCenter1 = null(projectionMatrix1);
+cameraCenter1 = cameraCenter1(1:3) ./ cameraCenter1(4);
+cameraCenter2 = null(projectionMatrix2);
+cameraCenter2 = cameraCenter2(1:3) ./ cameraCenter2(4);
+
 % Plot der 3D-Szene: Kalibrierungsobjekt und Kamerazentren
 
 % TODO
+figure(3); clf;
+hold on;
+plotCube(Xw, false);
+plot3(cameraCenterStereo1(1), cameraCenterStereo1(2), cameraCenterStereo1(3), 'bo', 'MarkerSize', 15, 'MarkerFaceColor', 'b');
+plot3(cameraCenterStereo2(1), cameraCenterStereo2(2), cameraCenterStereo2(3), 'ro', 'MarkerSize', 15, 'MarkerFaceColor', 'r');
+plot3(cameraCenter1(1), cameraCenter1(2), cameraCenter1(3), 'ko', 'MarkerSize', 15, 'MarkerFaceColor', 'k');
+plot3(cameraCenter2(1), cameraCenter2(2), cameraCenter2(3), 'go', 'MarkerSize', 15, 'MarkerFaceColor', 'g');
+legend('Kalibrierungsobjekt', 'Kamerazentrum Stereo 1', 'Kamerazentrum Stereo 2', 'Kamerazentrum 1', 'Kamerazentrum 2');
+view(-30, 30); axis on;
+
+figure(4); clf;
+subplot(1,2,1);
+imshow(img1); hold on;
+subplot(1,2,2);
+imshow(img2); hold on;
 
 % c) Rekonstruktion von 3D-Punkten mittels Triangulation
 
