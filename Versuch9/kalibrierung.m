@@ -74,19 +74,18 @@ imshow(img1); hold on;
 % draw the projected points
 plot(projPoints1(:,1), projPoints1(:,2), 'go', 'MarkerSize', 10);
 plot(points1(:,1), points1(:,2), 'r*', 'MarkerSize', 10);
-title('Projektion der Kalibrierungspunkte in Bild 1');
+error1 = sqrt(sum((points1(:,1:2) - projPoints1).^2, 2));
+meanError1 = mean(error1(points1(:,1)>0));
+title(sprintf('MSE: %.2f', meanError1));
 figure(2); clf;
 imshow(img2); hold on;
 plot(projPoints2(:,1), projPoints2(:,2), 'go', 'MarkerSize', 10);
 plot(points2(:,1), points2(:,2), 'r*', 'MarkerSize', 10);
-title('Projektion der Kalibrierungspunkte in Bild 2');
-error1 = sqrt(sum((points1(:,1:2) - projPoints1).^2, 2));
-meanError1 = mean(error1(points1(:,1)>0));
 error2 = sqrt(sum((points2(:,1:2) - projPoints2).^2, 2));
 meanError2 = mean(error2(points2(:,1)>0));
-fprintf('Mittlerer Rückprojektionsfehler Bild 1: %.2f Pixel\n', meanError1);
+title(sprintf('MSE: %.2f', meanError2));
 hold off;
-fprintf('Mittlerer Rückprojektionsfehler Bild 2: %.2f Pixel\n', meanError2);       
+
 %% Aufgabe 2: Szenenrekonstruktion und Triangulation
 % a) Bestimmung der Projektionsmatrix der zweiten Kamera
 
