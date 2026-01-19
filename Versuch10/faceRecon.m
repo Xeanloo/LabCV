@@ -31,10 +31,12 @@ end
 % "Meanface" erstellen und darstellen
 
 % TODO
+meanFace = mean(F, 2);
 
 % mittelwertfreie Gesichter generieren
 
 % TODO
+F_centered = F - meanFace;
 
 % Singulärwertzerlegung der mittelwertfreien Gesichter (svd)
 %
@@ -46,7 +48,7 @@ end
 % Die Matrix V ist für uns ohne Bedeutung.
 
 % TODO
-
+[U, S, V] = svd(F_centered, 'econ');
 %% b) Visualisieren Sie 4 Hauptkomponenten (z.B. 1, 50, 100, 300)
 % Verwenden Sie imagesc oder normalisieren Sie die Bilder.
 
@@ -64,22 +66,33 @@ d = 300;
 % ersten d Eigenvektoren (Eigenfaces) auswählen
 
 % TODO
+U_d = U(:, 1:d);
 
 % Mittelwert vom Bild abziehen
 
 % TODO
+F_centered_single = F_original - meanFace;
 
 % Projektion in den Unterraum
 
 % TODO
+coeffs = U_d' * F_centered_single;
 
 % Rekonstruktion aus dem Unterraum
 
 % TODO
+F_reconstructed = U_d * coeffs + meanFace;
 
 % Rekonstruktion darstellen
 
 % TODO
+figure;
+subplot(1,2,1);
+imshow(reshape(F_original, six, siy));
+title('Originalbild');
+subplot(1,2,2);
+imshow(reshape(F_reconstructed, six, siy));
+title(sprintf('Rekonstruiertes Bild mit d=%d', d));
 
 
 %% d) Rekonstruktion fehlender Daten
@@ -89,6 +102,7 @@ F_corrupted = reshape(im2double(imread(filename)), [], 1);
 % Bereich fehlender Daten bestimmen
 
 % TODO
+mask = F_corrupted == 0;
 
 % iterative Rekonstruktion:
 % Projektion -> Rekonstruktion -> Bereich mit Daten füllen -> Projektion...
