@@ -107,17 +107,27 @@ title(sprintf('Rekonstruiertes Bild mit d=%d', d));
 %% d) Rekonstruktion fehlender Daten
 filename = sprintf('%s/%i.pgm', ReconPath, 11);
 F_corrupted = reshape(im2double(imread(filename)), [], 1);
-
 % Bereich fehlender Daten bestimmen
-
-% TODO
 mask = F_corrupted == 0;
 
+% TODO
 % iterative Rekonstruktion:
 % Projektion -> Rekonstruktion -> Bereich mit Daten füllen -> Projektion...
 
 % TODO
+max_iters = 399;
+F_reconstructed_mask = F_corrupted;
+F_reconstructed_iter = F_corrupted;
+for iter = 1:max_iters
+    F_centered_iter = F_reconstructed_iter - meanFace;
+    coeffs_iter = U_d' * F_centered_iter;
+    F_reconstructed_iter = U_d * coeffs_iter + meanFace;
+    F_reconstructed_mask(mask) = F_reconstructed_iter(mask);
+end
 
+figure;
+imshow(reshape(F_reconstructed_iter, six, siy));
+title('Rekonstruiertes Bild mit fehlenden Daten');
 
 %% e) Rekonstruktion ohne exakte Trainingsdaten
 %  -> Wiederholen Sie obige Schritte, ohne dass Bilder der zu
