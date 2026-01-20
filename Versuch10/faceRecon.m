@@ -140,7 +140,40 @@ end
 %  Sie Bilder von Person 8 nicht zum Training.
 
 % TODO
-F_no11 = null(F)
+F_no8 = [];
+% fülle Datenmatrix
+for sub = 1:subjects
+    if sub ~= 8
+        for im = 1:images
+            filename = sprintf('%s/s%i/%i.pgm', CPath, sub, im);
+            if exist(filename, 'file')
+                % Speicher Bilder spaltenweise
+                F_no8 = [F_no8, reshape(im2double(imread(filename)), [], 1)];
+            end
+        end
+    end
+end
+
+[U_no8, S_no8, V_no8] = svd(F_no8 - mean(F_no8, 2), 'econ');
+F_reconstructed_iter = F_corrupted;
+iterations = [50, 100, 399];
+figure;
+subplot(1, length(iterations)+1, 1);
+imshow(reshape(F_original, six, siy));
+title('Originalbild');
+for i = 1:length(iterations)
+    iter = iterations(i);
+    for it = 1:iter
+        F_centered_iter = F_reconstructed_iter - mean(F_no8, 2);
+        coeffs_iter = U_no8' * F_centered_iter;
+        temp = U_no8 * coeffs_iter + mean(F_no8, 2);
+        F_reconstructed_iter(mask) = temp(mask);
+    end
+    subplot(1, length(iterations)+1, i+1);
+    imshow(reshape(F_reconstructed_iter, six, siy));
+    title(sprintf('d = %d ', iter));
+end
+
 
 %% *Rekonstruktion des eigenen Gesichts
 % Mit webcam_simple.mlapp kann ein Bild aufgenommen werden.
