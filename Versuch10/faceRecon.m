@@ -153,8 +153,20 @@ for sub = 1:subjects
         end
     end
 end
+mean_Face_no8 = mean(F_no8, 2);
+F_centered_no8 = F_no8 - mean_Face_no8;
+[U_no8, S_no8, V_no8] = svd(F_centered_no8, 'econ');
 
-[U_no8, S_no8, V_no8] = svd(F_no8 - mean(F_no8, 2), 'econ');
+% reconstruct whole image
+U_d = U_no8(:, 1:d);
+F_centered_single = F_original - mean_Face_no8;
+coeffs = U_d' * F_centered_single;
+F_reconstructed = U_d * coeffs + mean_Face_no8;
+figure;
+imshow(reshape(F_reconstructed, six, siy));
+
+
+% reconstruct only missing part
 F_reconstructed_iter = F_corrupted;
 iterations = [50, 100, 399];
 figure;
@@ -164,9 +176,9 @@ title('Originalbild');
 for i = 1:length(iterations)
     iter = iterations(i);
     for it = 1:iter
-        F_centered_iter = F_reconstructed_iter - mean(F_no8, 2);
+        F_centered_iter = F_reconstructed_iter - mean_Face_no8;
         coeffs_iter = U_no8' * F_centered_iter;
-        temp = U_no8 * coeffs_iter + mean(F_no8, 2);
+        temp = U_no8 * coeffs_iter + mean_Face_no8;
         F_reconstructed_iter(mask) = temp(mask);
     end
     subplot(1, length(iterations)+1, i+1);
