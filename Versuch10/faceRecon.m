@@ -52,7 +52,16 @@ F_centered = F - meanFace;
 %% b) Visualisieren Sie 4 Hauptkomponenten (z.B. 1, 50, 100, 300)
 % Verwenden Sie imagesc oder normalisieren Sie die Bilder.
 
-% TODO
+% 
+figure;
+components = [1, 50, 100, 300];
+for i = 1:length(components)
+    comp = components(i);
+    eigenface = reshape(U(:, comp), six, siy);
+    subplot(2, 2, i);
+    imshow(mat2gray(eigenface));
+    title(sprintf('Eigenface %d', comp));
+end
 
 
 %% c) Bildrekonstruktion aus dem Unterraum
