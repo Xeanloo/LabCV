@@ -71,6 +71,13 @@ function [X_updated, V_updated] = updateParticles(X, V)
     % Verschiebe X und aktualisiere Geschwindigkeit
     
         % TODO
+    nParticles = size(X, 2);
+
+    X_new = X + V + stdMovement * randn(2, nParticles);
+
+    V_updated = 0.5 * (V + (X_new - X)) + stdVelocity * randn(2, nParticles);
+
+    X_updated = X_new;
     
 end
 
@@ -102,12 +109,22 @@ function [X_sampled, V_sampled] = resampleParticles(X, V, L)
     % Schätze Verteilungsfunktion der Partikel
     
         % TODO
-    
+    L = L + 1e-12;
+
+    L = L / sum(L);
+
+    cdf = cumsum(L); 
+
+    cdf(end) = 1;
+
+    nParticles = size(X, 2);
+
     % Ziehe zufällig Partikel aus der obigen Verteilungsfunktion
-    
-        % TODO
+    randomValues = rand(1, nParticles);
+
+    indices = arrayfun(@(rv) find(cdf >= rv, 1, 'first'), randomValues);
     
     % Resampling
-    
-        % TODO
+    X_sampled = X(:, indices);
+    V_sampled = V(:, indices);
 end
