@@ -1,18 +1,18 @@
 %% Daten einlesen
 % Using built-in VideoReader
-vr = VideoReader('test.avi');
+% vr = VideoReader('test.avi');
 
 % frames = zeros(vr.Height, vr.Width, 3, vr.NumberOfFrames, 'uint8');
-frames = read(vr, 'native');
+% frames = read(vr, 'native');
 
 % % Alternative: Use ffmpeg (https://ffmpeg.org/download.html)
 % mkdir('frames')
 % system('ffmpeg -i test.avi frames/%04d.png');
-% num_frames = numel(dir('frames/')) - 2;
-% frames = zeros(480, 640, 3, num_frames, 'uint8');
-% for i = 1:num_frames
-%     frames(:, :, :, i) = imread(sprintf('frames/%04d.png', i));
-% end
+num_frames = numel(dir('frames/')) - 2;
+frames = zeros(480, 640, 3, num_frames, 'uint8');
+for i = 1:num_frames
+   frames(:, :, :, i) = imread(sprintf('frames/%04d.png', i));
+end
 
 frames = frames(:, :, :, 2:end);
 
