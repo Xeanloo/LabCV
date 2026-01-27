@@ -10,15 +10,18 @@ function [p, particles] = particleFilterTracking(M, particles, meanColor)
     % Initialisierung
     [m, n, ~, t] = size(M);
     
-    if nargin < 2
-        % Erzeuge Partikel
-        nParticle = 50;
-        [X, V] = createParticles(m, n, nParticle);
-    else
-        % Nutze bekannte Partikel
-        X = particles.X;
-        V = particles.V;
-    end
+    nParticle = 50;
+    [X, V] = createParticles(m, n, nParticle);
+    % if nargin < 2
+    %     % Erzeuge Partikel
+    %     nParticle = 50;
+    %     [X, V] = createParticles(m, n, nParticle);
+    % else
+    %     [X, V] = createParticles(m, n, nParticle);
+    %     % Nutze bekannte Partikel
+    %     X = particles.X;
+    %     V = particles.V;
+    % end
     
     p = zeros(2, t);
     for i = 1:t
@@ -41,17 +44,16 @@ function [p, particles] = particleFilterTracking(M, particles, meanColor)
         particles.V = V;
         
         % plot
-        if nargin < 2
-            figure(2);
-            imshow(I);
-            hold on
-            plot(X(1, :), X(2, :), 'xw', 'MarkerSize', 6, 'LineWidth', 2);
-            plot(p(1, i), p(2, i), '.g', 'MarkerSize', 40);
-            plot(p(1, i), p(2, i), '.r', 'MarkerSize', 20);
-            hold off
-            drawnow;
-        end
+        figure(2);
+        imshow(I);
+        hold on
+        plot(X(1, :), X(2, :), 'xw', 'MarkerSize', 6, 'LineWidth', 2);
+        plot(p(1, i), p(2, i), '.g', 'MarkerSize', 40);
+        plot(p(1, i), p(2, i), '.r', 'MarkerSize', 20);
+        hold off
+        drawnow;
     end
+    close all;
 end
 
 function [X, V] = createParticles(m, n, nParticles)
@@ -88,7 +90,7 @@ function L = likelihood(X, I, meanColor)
     nParticles = size(X, 2);
     I = double(I);
     
-    stdColor = 50;
+    stdColor = 25;
 
     if nargin < 3
         meanColor = [255, 0, 0];

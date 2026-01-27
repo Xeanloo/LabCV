@@ -50,20 +50,20 @@ x = round(x);
 y = round(y);
 
 X = [x; y];
-
-meanColor = round(frames(y, x, :, 1));
+[m, n, ~, t] = size(frames);
+meanColor = squeeze(frames(y, x, :, 1))';
 meanColor = double(meanColor);
 nParticles = 50;
-particles.X = repmat(X, 1, nParticles) + 15 * randn(2, nParticles);
+particles.X = [randi(n, 1, nParticles); randi(m, 1, nParticles)];
 particles.V = zeros(2, nParticles);
 
 p = particleFilterTracking(frames, particles, meanColor);
 %% Pfad
-for i = 1:size(p, 2)
-    figure(2);
-    imshow(frames(:, :, :, i));
-    hold on;
-    plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
-    hold off;
-    drawnow;
-end
+% for i = 1:size(p, 2)
+%     figure(2);
+%     imshow(frames(:, :, :, i));
+%     hold on;
+%     plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
+%     hold off;
+%     drawnow;
+% end
