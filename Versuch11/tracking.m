@@ -18,26 +18,26 @@ frames = frames(:, :, :, 2:end);
 
 
 %% Aufgabe 1: Block Matcher
-% figure(1); clf;
-% imshow(frames(:, :, :, 1));
-% title('Wähle Startpunkt!')
+figure(1); clf;
+imshow(frames(:, :, :, 1));
+title('Wähle Startpunkt!')
 
-% [x, y] = ginput(1);
-% x = round(x);
-% y = round(y);
+[x, y] = ginput(1);
+x = round(x);
+y = round(y);
 
-% close all;
-% p = TDLS(frames, x, y, 25);
+close all;
+p = TDLS(frames, x, y, 25);
 
 % %% Pfad
-% for i = 1:size(p, 2)
-%     figure(1);
-%     imshow(frames(:, :, :, i));
-%     hold on;
-%     plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
-%     hold off;
-%     drawnow;
-% end
+for i = 1:size(p, 2)
+    figure(1);
+    imshow(frames(:, :, :, i));
+    hold on;
+    plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
+    hold off;
+    drawnow;
+end
 
 %% Aufgabe 2: Partikelfilter
 close all;
@@ -59,11 +59,11 @@ particles.V = zeros(2, nParticles);
 
 p = particleFilterTracking(frames, particles, meanColor);
 %% Pfad
-% for i = 1:size(p, 2)
-%     figure(2);
-%     imshow(frames(:, :, :, i));
-%     hold on;
-%     plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
-%     hold off;
-%     drawnow;
-% end
+for i = 1:size(p, 2)
+    figure(2);
+    imshow(frames(:, :, :, i));
+    hold on;
+    plot(p(1, 1:i), p(2, 1:i), 'w', 'LineWidth', 3);
+    hold off;
+    drawnow;
+end
