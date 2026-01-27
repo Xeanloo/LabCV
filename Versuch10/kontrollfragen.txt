@@ -1,0 +1,3 @@
+1) translation ist irrelevant, skalierung bestimmt die Varianz in die jeweilige Richtung
+2) umso mehr eigenfaces benutzt werden, desto besser die rekonstruktion
+3) die rekonstruktion ist besser wenn die faces der Person genutzt werden. wenn die faces nicht genutzt werden, hat die anzahl der verwendeten eigenfaces keinen Einfluss auf die rekonstruktionsqualität

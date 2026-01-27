@@ -1,0 +1,5 @@
+a) Die Varianz der einzelnen Variablen auf der Diagonalen und die Kovarianzen zwischen den Variablen in den übrigen Stellen.
+b) der naive Klassifikator geht vereinfachend davon aus, dass die einzelnen Variablen unabhängig voneinander sind, d.h. Kovarianz = 0. Im vollen Klassifikator wird stattdessen die echte Kovarianz in die Rechnung mit aufgenommen.
+c) Person 3 wird als weiblich klassifiziert, weil der Datenpunkt besser zum weiblichen Zusammenhang zwischen Gewicht und Größe passt (die Person wird als zu schwer für einen Mann dieser Größe klassifiziert, weshalb weiblich das Ergebnis ist). Im naiven Klassifikator wird die Kovarianz nicht berücksichtigt, weshalb das Ergebnis männlich ist.
+d) Andere Merkmale wären zB die mittlere Differenz zum Mittelzellbild.
+e) Weil der untere Bildrand tiefschwarz ist, wodurch der Mittelwert der Wandmaske sehr niedrig ist, wodurch die Differenz zum Kern größer wird.

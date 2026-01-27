@@ -1,0 +1,6 @@
+1) Chi-Square passt die Gewichtung der Differenzen an die absolute Anzahl der Einträge in den Bins an, sodass die Unterschiede normalisiert werden und große relative Abweichungen erkannt werden können. 0 wenn die Histogramme identisch sind. 1 wenn Histogramm A an jeder Stelle 0 hat, an der B nicht null hat, und andersrum.
+2) Wie oft welche Zahlen als welche Zahl klassifiziert werden. 1 ist am einfachsten zu klassifizieren, weil die 1 keine Kreise oder Ecken enthält im Gegensatz zu anderen Zahlen. 6 ist schwieriger, weil große Ähnlichkeit zur 0 besteht.
+3) Die Kosten sind die Summe des durchschnittlichen besten Matches von P zu Q und des durchschnittlichen besten Matches von Q zu P.
+4) Invariant gegen Translation, aber nicht Rotation oder Skalierung. 
+Lösungen für Rotationsinvarianz: Winkel gegen die Tangente des Randes am Punkt P berechnen.
+Lösungen für Skalierungsinvarianz: Das Raster abhängig von der maximalen Distanz zweier Punkte skalieren.

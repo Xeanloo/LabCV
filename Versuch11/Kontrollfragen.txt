@@ -1,0 +1,4 @@
+1) a) Distanzmaß + Suchstrategie b) Verschiebung mit Bewegungsmodell, Likelihood-Berechnung der einzelnen Partikel, Resampling um unwahrscheinliche Partikel rauszufiltern
+2) a) bspw. empfindlich gegenüber Beleuchtungsänderung -> robusteres (normalisiertes) Distanzmaß b) kann das Objekt "aus den Augen verlieren" wenn es zu schnell ist -> höheres Rauschen einstellen  
+3) Blockmatching versagt, wenn das Objekt verdeckt wird, ist aber ansonsten sehr präzise.
+Partikelfilter ist robuster bei nichtlinearer Bewegung oder Verdeckung, aber nicht deterministisch und komplexer.

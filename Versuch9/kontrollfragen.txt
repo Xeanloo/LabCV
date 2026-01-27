@@ -1,0 +1,2 @@
+a) Mindestens 6, da die Matrix 11 zu berechnende Einträge hat, d.h. es sind 11 Gleichungen vonnöten, um das System zu lösen, und jeder Punkt liefert 2 Gleichungen, ergo 6 Punkte.
+b) Weil der Mess-/Klickfehler "geglättet" wird.

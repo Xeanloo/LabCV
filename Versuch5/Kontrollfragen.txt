@@ -1,0 +1,4 @@
+1) weil der KMeans Algo nur kreisförmige Cluster finden kann, da er die mittlere quadratische Distanz zum Mittelpunkt minimiert.
+2) Weil auch die "korrekte" Anzahl der Cluster nicht eindeutig ist, wenn die Daten zB sehr verrauscht sind/keine eindeutigen Muster aufweisen.
+3) k-means: nicht-deterministisch, kann nur kreisförmige Cluster finden, erfordert die manuelle Bestimmung der Clusterzahl, aber rechentechnisch billig
+mean shift: deterministisch, kann Cluster jeder Form finden, findet Anzahl der Cluster automatisch, ist dafür aber aufwendiger

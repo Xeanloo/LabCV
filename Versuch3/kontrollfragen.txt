@@ -1,0 +1,4 @@
+a) Weil in der Mitte des Rechtecks der Wert der außenliegenden Region sich dem Mittelwert des Rechtecks annähert, wodurch der Algorithmus keinen Unterschied in den Regionen mehr feststellen kann.
+Eine Lösung wäre, das Bild in eine Gradientmap zu transformieren, bevor man die Segmentierung durchführt.
+
+b) Weil Rauschen sonst zur Übersegmentierung führt.

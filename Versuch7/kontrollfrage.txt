@@ -1,0 +1,2 @@
+1) Bei mehrdimensionalen Problemen.
+2) Wenn die Zielfunktionsgerade bei Verschiebung in die Optimierungsrichtung auf einer Kante des Polytops landet.
