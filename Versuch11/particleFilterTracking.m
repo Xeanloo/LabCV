@@ -1,4 +1,4 @@
-function [p, particles] = particleFilterTracking(M, particles)
+function [p, particles] = particleFilterTracking(M, particles, meanColor)
 % Partikelfilter zum Verfolgen von Bereichen mit einer bestimmten Farbe.
 %
 % Eingabe: M         - Video, (m x n x 3 x t)-Array
@@ -28,7 +28,7 @@ function [p, particles] = particleFilterTracking(M, particles)
         [X, V] = updateParticles(X, V);
         
         % Bestimme Likelihood
-        L = likelihood(X, I);
+        L = likelihood(X, I, meanColor);
         
         % Bestimme Mittelpunkt
         p(1:2, i) = L / sum(L) * X';
@@ -81,7 +81,7 @@ function [X_updated, V_updated] = updateParticles(X, V)
     
 end
 
-function L = likelihood(X, I)
+function L = likelihood(X, I, meanColor)
     
     % Initialisierung
     [m, n, ~] = size(I);
@@ -89,8 +89,11 @@ function L = likelihood(X, I)
     I = double(I);
     
     stdColor = 50;
-    meanColor = [255, 0, 0];
-    
+
+    if nargin < 3
+        meanColor = [255, 0, 0];
+    end
+
     L = zeros(1, nParticles);
     
     x = round(X(1, :));
